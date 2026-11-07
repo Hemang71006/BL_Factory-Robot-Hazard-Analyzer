@@ -5,13 +5,14 @@ import java.util.Scanner;
 
 /**
  * Project Name : Factory Robot Hazard Analyzer
- * Use Case     : UC6 - Custom Robot Safety Exception
+ * Use Case     : UC7 - Machinery State Risk Mapping
  * Author       : Hemang
  * Date         : 05-11-2026
  *
  * Description:
- * This class accepts robot hazard inputs, validates them
- * using a custom exception and calculates the risk score.
+ * This class accepts robot hazard inputs, validates them,
+ * maps machinery states to risk factors and calculates
+ * the final robot hazard risk score.
  */
 
 public class FactoryRobotHazardAnalyzer {
@@ -40,19 +41,11 @@ public class FactoryRobotHazardAnalyzer {
             System.out.print("Enter Machinery State (Worn/Faulty/Critical): ");
             String machineryState = scanner.next();
 
-            // Validate inputs using custom exception
+            // Validate inputs
             validateInputs(armPrecision, workerDensity, machineryState);
 
-            // Assign machinery risk factor
-            double machineRiskFactor = 0.0;
-
-            if (machineryState.equals("Worn")) {
-                machineRiskFactor = 1.3;
-            } else if (machineryState.equals("Faulty")) {
-                machineRiskFactor = 2.0;
-            } else if (machineryState.equals("Critical")) {
-                machineRiskFactor = 3.0;
-            }
+            // Get machinery risk factor using separate method
+            double machineRiskFactor = getMachineRiskFactor(machineryState);
 
             // Calculate robot hazard risk score
             double riskScore = ((1.0 - armPrecision) * 15.0)
@@ -92,11 +85,33 @@ public class FactoryRobotHazardAnalyzer {
         }
 
         // Validate machinery state
-        if (!machineryState.equals("Worn")
-                && !machineryState.equals("Faulty")
-                && !machineryState.equals("Critical")) {
+        if (!"Worn".equals(machineryState)
+                && !"Faulty".equals(machineryState)
+                && !"Critical".equals(machineryState)) {
             throw new RobotSafetyException(
                     "Error: Unsupported machinery state");
+        }
+    }
+
+    // Map machinery state to its corresponding risk factor
+    public static double getMachineRiskFactor(String machineryState)
+            throws RobotSafetyException {
+
+        // Assign risk factor based on machinery state
+        switch (machineryState == null ? "" : machineryState) {
+
+            case "Worn":
+                return 1.3;
+
+            case "Faulty":
+                return 2.0;
+
+            case "Critical":
+                return 3.0;
+
+            default:
+                throw new RobotSafetyException(
+                        "Error: Unsupported machinery state");
         }
     }
 }
