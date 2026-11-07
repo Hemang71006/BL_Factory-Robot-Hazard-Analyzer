@@ -5,13 +5,13 @@ import java.util.Scanner;
 
 /**
  * Project Name : Factory Robot Hazard Analyzer
- * Use Case     : UC2 - Accept Robot Hazard Inputs
+ * Use Case     : UC3 - Calculate Hazard Risk Score
  * Author       : Hemang
  * Date         : 05-11-2026
  *
  * Description:
- * This class accepts robot arm precision, worker density
- * and machinery state from the user.
+ * This class accepts robot hazard inputs and calculates
+ * the hazard risk score without input validation.
  */
 
 public class FactoryRobotHazardAnalyzer {
@@ -26,12 +26,8 @@ public class FactoryRobotHazardAnalyzer {
         System.out.println("     FACTORY ROBOT HAZARD ANALYZER");
         System.out.println("==========================================");
 
-        // Display system initialization message
-        System.out.println("Robot Hazard Analysis System Initialized.");
-        System.out.println("System is ready to monitor factory robot safety.");
-
         // Accept robot arm precision
-        System.out.print("\nEnter Robot Arm Precision (0.0-1.0): ");
+        System.out.print("Enter Robot Arm Precision (0.0-1.0): ");
         double armPrecision = scanner.nextDouble();
 
         // Accept worker density
@@ -42,12 +38,23 @@ public class FactoryRobotHazardAnalyzer {
         System.out.print("Enter Machinery State (Worn/Faulty/Critical): ");
         String machineryState = scanner.next();
 
-        // Display accepted inputs
-        System.out.println("\n========== INPUT DETAILS ==========");
-        System.out.println("Robot Arm Precision: " + armPrecision);
-        System.out.println("Worker Density: " + workerDensity);
-        System.out.println("Machinery State: " + machineryState);
-        System.out.println("===================================");
+        // Assign machinery risk factor
+        double machineRiskFactor = 0.0;
+
+        if (machineryState.equals("Worn")) {
+            machineRiskFactor = 1.3;
+        } else if (machineryState.equals("Faulty")) {
+            machineRiskFactor = 2.0;
+        } else if (machineryState.equals("Critical")) {
+            machineRiskFactor = 3.0;
+        }
+
+        // Calculate robot hazard risk score
+        double riskScore = ((1.0 - armPrecision) * 15.0)
+                + (workerDensity * machineRiskFactor);
+
+        // Display hazard risk score
+        System.out.println("\nRobot Hazard Risk Score: " + riskScore);
 
         // Close Scanner
         scanner.close();
