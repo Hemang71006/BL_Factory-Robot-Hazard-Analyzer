@@ -5,26 +5,25 @@ import java.util.Scanner;
 
 /**
  * Project Name : Factory Robot Hazard Analyzer
- * Use Case     : UC7 - Machinery State Risk Mapping
+ * Use Case     : UC8 - Fully Modular & OOPS-Compliant
  * Author       : Hemang
  * Date         : 05-11-2026
  *
  * Description:
- * This class accepts robot hazard inputs, validates them,
- * maps machinery states to risk factors and calculates
- * the final robot hazard risk score.
+ * Main application that connects input, validation,
+ * machinery mapping and risk calculation modules.
  */
 
 public class FactoryRobotHazardAnalyzer {
 
     public static void main(String[] args) {
 
-        // Create Scanner object for user input
+        // Create Scanner object
         Scanner scanner = new Scanner(System.in);
 
         try {
 
-            // Display system heading
+            // Display application heading
             System.out.println("==========================================");
             System.out.println("     FACTORY ROBOT HAZARD ANALYZER");
             System.out.println("==========================================");
@@ -41,17 +40,21 @@ public class FactoryRobotHazardAnalyzer {
             System.out.print("Enter Machinery State (Worn/Faulty/Critical): ");
             String machineryState = scanner.next();
 
-            // Validate inputs
-            validateInputs(armPrecision, workerDensity, machineryState);
+            // Create input object
+            RobotHazardInput input = new RobotHazardInput(
+                    armPrecision,
+                    workerDensity,
+                    machineryState
+            );
 
-            // Get machinery risk factor using separate method
-            double machineRiskFactor = getMachineRiskFactor(machineryState);
+            // Validate input values
+            HazardValidator.validate(input);
 
-            // Calculate robot hazard risk score
-            double riskScore = ((1.0 - armPrecision) * 15.0)
-                    + (workerDensity * machineRiskFactor);
+            // Calculate final risk score
+            double riskScore =
+                    HazardRiskCalculator.calculateRiskScore(input);
 
-            // Display hazard risk score
+            // Display final risk score
             System.out.println("\nRobot Hazard Risk Score: " + riskScore);
 
         } catch (RobotSafetyException exception) {
@@ -63,55 +66,6 @@ public class FactoryRobotHazardAnalyzer {
 
             // Close Scanner
             scanner.close();
-        }
-    }
-
-    // Separate method to validate all inputs
-    public static void validateInputs(double armPrecision,
-                                      int workerDensity,
-                                      String machineryState)
-            throws RobotSafetyException {
-
-        // Validate robot arm precision
-        if (armPrecision < 0.0 || armPrecision > 1.0) {
-            throw new RobotSafetyException(
-                    "Error: Arm precision must be 0.0-1.0");
-        }
-
-        // Validate worker density
-        if (workerDensity < 1 || workerDensity > 20) {
-            throw new RobotSafetyException(
-                    "Error: Worker density must be 1-20");
-        }
-
-        // Validate machinery state
-        if (!"Worn".equals(machineryState)
-                && !"Faulty".equals(machineryState)
-                && !"Critical".equals(machineryState)) {
-            throw new RobotSafetyException(
-                    "Error: Unsupported machinery state");
-        }
-    }
-
-    // Map machinery state to its corresponding risk factor
-    public static double getMachineRiskFactor(String machineryState)
-            throws RobotSafetyException {
-
-        // Assign risk factor based on machinery state
-        switch (machineryState == null ? "" : machineryState) {
-
-            case "Worn":
-                return 1.3;
-
-            case "Faulty":
-                return 2.0;
-
-            case "Critical":
-                return 3.0;
-
-            default:
-                throw new RobotSafetyException(
-                        "Error: Unsupported machinery state");
         }
     }
 }
