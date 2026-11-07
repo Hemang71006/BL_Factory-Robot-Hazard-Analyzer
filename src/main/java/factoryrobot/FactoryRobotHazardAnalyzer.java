@@ -5,13 +5,13 @@ import java.util.Scanner;
 
 /**
  * Project Name : Factory Robot Hazard Analyzer
- * Use Case     : UC4 - Introduce Conditional Validation
+ * Use Case     : UC5 - Refactor Validation into Separate Method
  * Author       : Hemang
  * Date         : 05-11-2026
  *
  * Description:
  * This class accepts robot hazard inputs, validates them
- * using conditional statements and calculates the risk score.
+ * using a separate method and calculates the risk score.
  */
 
 public class FactoryRobotHazardAnalyzer {
@@ -38,25 +38,8 @@ public class FactoryRobotHazardAnalyzer {
         System.out.print("Enter Machinery State (Worn/Faulty/Critical): ");
         String machineryState = scanner.next();
 
-        // Validate robot arm precision
-        if (armPrecision < 0.0 || armPrecision > 1.0) {
-            System.out.println("Error: Arm precision must be 0.0-1.0");
-            scanner.close();
-            return;
-        }
-
-        // Validate worker density
-        if (workerDensity < 1 || workerDensity > 20) {
-            System.out.println("Error: Worker density must be 1-20");
-            scanner.close();
-            return;
-        }
-
-        // Validate machinery state
-        if (!machineryState.equals("Worn")
-                && !machineryState.equals("Faulty")
-                && !machineryState.equals("Critical")) {
-            System.out.println("Error: Unsupported machinery state");
+        // Validate inputs using a separate method
+        if (!validateInputs(armPrecision, workerDensity, machineryState)) {
             scanner.close();
             return;
         }
@@ -81,5 +64,33 @@ public class FactoryRobotHazardAnalyzer {
 
         // Close Scanner
         scanner.close();
+    }
+
+    // Separate method to validate all inputs
+    public static boolean validateInputs(double armPrecision,
+                                         int workerDensity,
+                                         String machineryState) {
+
+        // Validate robot arm precision
+        if (armPrecision < 0.0 || armPrecision > 1.0) {
+            System.out.println("Error: Arm precision must be 0.0-1.0");
+            return false;
+        }
+
+        // Validate worker density
+        if (workerDensity < 1 || workerDensity > 20) {
+            System.out.println("Error: Worker density must be 1-20");
+            return false;
+        }
+
+        // Validate machinery state
+        if (!machineryState.equals("Worn")
+                && !machineryState.equals("Faulty")
+                && !machineryState.equals("Critical")) {
+            System.out.println("Error: Unsupported machinery state");
+            return false;
+        }
+
+        return true;
     }
 }
